@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using AuthService.Application.Persistence;
+
 namespace AuthService.Api;
 
 public class Program
@@ -7,6 +10,11 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddAuthorization();
+        
+        builder.Services.AddDbContext<AuthDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
         
         var app = builder.Build();
         
