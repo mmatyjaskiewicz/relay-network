@@ -1,6 +1,8 @@
-﻿namespace AuthService.Application.Interfaces;
+﻿using AuthService.Application.Entities;
 
-public class IUserRepository
+namespace AuthService.Application.Interfaces;
+
+public interface IUserRepository
 {
-    
+    public Task CreateUserAsync(UserEntity user);
 }
