@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using AuthService.Application.Persistence;
+using AuthService.Application.Validators;
+using FluentValidation;
 
 namespace AuthService.Api;
 
@@ -15,6 +17,8 @@ public class Program
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+        
+        builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
         
         var app = builder.Build();
         

@@ -1,6 +1,31 @@
-﻿namespace AuthService.Application.Services;
+﻿using AuthService.Application.DTOs.Requests;
+using AuthService.Application.Entities;
+using AuthService.Application.Interfaces;
+using FluentValidation;
 
-public class AuthService
+namespace AuthService.Application.Services;
+
+public class AuthService(IUserRepository userRepository, IValidator<RegisterRequest> registerValidator)
 {
-    
+    public async Task RegisterAsync(RegisterRequest request)
+    {
+        await registerValidator.ValidateAndThrowAsync(request);
+        
+        var existingUser = await userRepository.GetUserByUsernameAsync(request.Username);
+        if (existingUser != null)
+        {
+            throw new Exception("User already exists");
+        }
+        
+        var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
+
+        var user = new UserEntity
+        {
+            Id = Guid.NewGuid(),
+            Username = request.Username,
+            PasswordHash = passwordHash
+        };
+
+        await userRepository.CreateUserAsync(user);
+    }
 }

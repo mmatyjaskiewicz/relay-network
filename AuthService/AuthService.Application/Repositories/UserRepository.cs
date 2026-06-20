@@ -1,21 +1,20 @@
 ﻿using AuthService.Application.Entities;
 using AuthService.Application.Interfaces;
 using AuthService.Application.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Application.Repositories;
 
-public class UserRepository : IUserRepository
-{
-    private readonly AuthDbContext _context;
-    
-    public UserRepository(AuthDbContext context)
+public class UserRepository(AuthDbContext context) : IUserRepository
+{ 
+    public async Task<UserEntity?> GetUserByUsernameAsync(string username)
     {
-        _context = context;
+        return await context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
     
     public async Task CreateUserAsync(UserEntity user)
     {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
     }
 }
