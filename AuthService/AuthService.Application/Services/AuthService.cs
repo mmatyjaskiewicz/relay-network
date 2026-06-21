@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.DTOs.Requests;
 using AuthService.Application.Entities;
+using AuthService.Application.Exceptions;
 using AuthService.Application.Interfaces;
 using FluentValidation;
 
@@ -14,7 +15,7 @@ public class AuthService(IUserRepository userRepository, IValidator<RegisterRequ
         var existingUser = await userRepository.GetUserByUsernameAsync(request.Username);
         if (existingUser != null)
         {
-            throw new Exception("User already exists");
+            throw new UserAlreadyExistsException(request.Username);
         }
         
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);

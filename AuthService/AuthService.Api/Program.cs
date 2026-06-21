@@ -1,3 +1,4 @@
+using AuthService.Api.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using AuthService.Application.Persistence;
 using AuthService.Application.Validators;
@@ -20,7 +21,12 @@ public class Program
         
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
         
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddProblemDetails();
+        
         var app = builder.Build();
+        
+        app.UseExceptionHandler();
         
         app.UseHttpsRedirection();
 
