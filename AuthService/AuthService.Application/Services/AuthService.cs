@@ -16,7 +16,11 @@ public class AuthService(IUserRepository userRepository, IValidator<RegisterRequ
         var existingUser = await userRepository.GetUserByUsernameAsync(request.Username);
         if (existingUser != null)
         {
-            throw new UserAlreadyExistsException(request.Username);
+            return new RegisterResult
+            {
+                Success = false,
+                Message = "Username already exists."
+            };
         }
         
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -42,7 +46,11 @@ public class AuthService(IUserRepository userRepository, IValidator<RegisterRequ
         var user = await userRepository.GetUserByUsernameAsync(request.Username);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            throw new InvalidCredentialsException();
+            return new LoginResult
+            {
+                Success = false,
+                Message = "Invalid username or password."
+            };
         }
         
         string token = "MockAccessToken";

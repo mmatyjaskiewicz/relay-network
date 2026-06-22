@@ -1,6 +1,8 @@
 using AuthService.Api.Exceptions;
+using AuthService.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AuthService.Application.Persistence;
+using AuthService.Application.Repositories;
 using AuthService.Application.Validators;
 using FluentValidation;
 
@@ -13,6 +15,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddAuthorization();
+        builder.Services.AddControllers();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<Application.Services.AuthService>();
         
         builder.Services.AddDbContext<AuthDbContext>(options =>
         {
@@ -32,6 +37,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        
+        app.MapControllers();
         
         app.Run();
     }

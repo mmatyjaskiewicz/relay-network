@@ -9,12 +9,20 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         var statusCode = exception switch
         {
-            UserAlreadyExistsException => StatusCodes.Status409Conflict, _ => StatusCodes.Status500InternalServerError
+            UserAlreadyExistsException => StatusCodes.Status409Conflict,
+            
+            InvalidCredentialsException => StatusCodes.Status401Unauthorized,
+            
+            _ => StatusCodes.Status500InternalServerError
         };
 
         var message = exception switch
         {
-            UserAlreadyExistsException => exception.Message, _ => "Internal server error"
+            UserAlreadyExistsException => exception.Message, 
+            
+            InvalidCredentialsException => exception.Message,
+            
+            _ => "Internal server error"
         };
 
         httpContext.Response.StatusCode = statusCode;
