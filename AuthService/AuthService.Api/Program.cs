@@ -20,6 +20,7 @@ public class Program
         });
         
         builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+        builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
         
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
