@@ -1,13 +1,13 @@
 ﻿using AuthService.Application.DTOs.Requests;
 using AuthService.Application.DTOs.Results;
 using AuthService.Application.Entities;
-using AuthService.Application.Exceptions;
 using AuthService.Application.Interfaces;
 using FluentValidation;
 
 namespace AuthService.Application.Services;
 
-public class AuthService(IUserRepository userRepository, IValidator<RegisterRequest> registerValidator)
+public class AuthService(IUserRepository userRepository,TokenService tokenService
+    ,IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator)
 {
     public async Task<RegisterResult> RegisterAsync(RegisterRequest request)
     {
@@ -43,6 +43,8 @@ public class AuthService(IUserRepository userRepository, IValidator<RegisterRequ
     
     public async Task<LoginResult> LoginAsync(LoginRequest request)
     {
+        await loginValidator.ValidateAndThrowAsync(request);
+        
         var user = await userRepository.GetUserByUsernameAsync(request.Username);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
@@ -53,7 +55,7 @@ public class AuthService(IUserRepository userRepository, IValidator<RegisterRequ
             };
         }
         
-        string token = "MockAccessToken";
+        string token = tokenService.GenerateToken(user);
         
         return new LoginResult
         {

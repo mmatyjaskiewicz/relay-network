@@ -28,7 +28,15 @@ public class AuthController(Application.Services.AuthService authService) : Cont
         {
             throw new InvalidCredentialsException();
         }
-
+        
+        Response.Cookies.Append("jwt", result.Token!, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = false,
+            SameSite = SameSiteMode.Lax,
+            Expires = DateTimeOffset.UtcNow.AddHours(1)
+        });
+        
         return Ok(result.Token);
     }
 }
