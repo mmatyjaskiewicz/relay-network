@@ -4,6 +4,7 @@ using AuthService.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AuthService.Application.Persistence;
 using AuthService.Application.Repositories;
+using AuthService.Application.Security;
 using AuthService.Application.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,13 +23,20 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<Application.Services.AuthService>();
-        builder.Services.AddScoped<Application.Services.TokenService>();
+        builder.Services.AddScoped<JwtGenerator>();
         
         // Configure PostgreSQL database context
         builder.Services.AddDbContext<AuthDbContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+        
+        // Configure JWT settings
+        builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+            
+        var jwtSettings = builder.Configuration
+                              .GetSection("Jwt")
+                              .Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings are missing.");
         
         // Configure JWT authentication
         builder.Services.AddAuthentication(options =>
@@ -52,21 +60,17 @@ public class Program
                         return Task.CompletedTask;
                     }
                 };
-
-                var key = builder.Configuration["Jwt:Key"];
-
+                
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(key!)
-                    ),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
 
                     ValidateIssuer = true,
                     ValidateAudience = true,
 
-                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    ValidIssuer = builder.Configuration[jwtSettings.Issuer],
+                    ValidAudience = builder.Configuration[jwtSettings.Audience],
 
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero

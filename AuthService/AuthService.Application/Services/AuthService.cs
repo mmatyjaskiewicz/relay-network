@@ -2,12 +2,13 @@
 using AuthService.Application.DTOs.Results;
 using AuthService.Application.Entities;
 using AuthService.Application.Interfaces;
+using AuthService.Application.Security;
 using FluentValidation;
 
 namespace AuthService.Application.Services;
 
-public class AuthService(IUserRepository userRepository,TokenService tokenService
-    ,IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator)
+public class AuthService(IUserRepository userRepository,JwtGenerator jwtGenerator,
+    IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator)
 {
     public async Task<RegisterResult> RegisterAsync(RegisterRequest request)
     {
@@ -55,7 +56,7 @@ public class AuthService(IUserRepository userRepository,TokenService tokenServic
             };
         }
         
-        string token = tokenService.GenerateToken(user);
+        string token = jwtGenerator.GenerateToken(user);
         
         return new LoginResult
         {

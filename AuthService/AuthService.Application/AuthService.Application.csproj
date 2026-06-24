@@ -24,6 +24,5 @@
 
     <ItemGroup>
       <Folder Include="DTOs\Responses\" />
-      <Folder Include="Security\" />
     </ItemGroup>
 </Project>

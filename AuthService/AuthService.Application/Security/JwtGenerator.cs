@@ -2,13 +2,15 @@
 using System.Security.Claims;
 using System.Text;
 using AuthService.Application.Entities;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthService.Application.Services;
+namespace AuthService.Application.Security;
 
-public class TokenService(IConfiguration configuration)
-{
+public class JwtGenerator(IOptions<JwtSettings> options)
+{ 
+    private readonly JwtSettings _settings = options.Value;
+    
     public string GenerateToken(UserEntity user)
     {
         var claims = new List<Claim>
@@ -17,14 +19,14 @@ public class TokenService(IConfiguration configuration)
             new Claim("username", user.Username!),
         };
         
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Key));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         
         var token = new JwtSecurityToken(
-            issuer: configuration["Jwt:Issuer"],
-            audience: configuration["Jwt:Audience"],
+            issuer: _settings.Issuer,
+            audience: _settings.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.UtcNow.AddHours(_settings.ExpirationInMinutes),
             signingCredentials: credentials
         );
         
