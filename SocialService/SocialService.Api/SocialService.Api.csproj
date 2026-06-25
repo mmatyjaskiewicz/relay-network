@@ -13,8 +13,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
       <Folder Include="Exceptions\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SocialService.Application\SocialService.Application.csproj" />
     </ItemGroup>
 
 </Project>
