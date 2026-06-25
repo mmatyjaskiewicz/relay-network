@@ -15,5 +15,40 @@ services:
         volumes:
             - auth-db-data:/var/lib/postgresql/data
 
+    social-db:
+        image: postgres:17
+        container_name: relay-social-db
+        restart: unless-stopped
+
+        environment:
+            POSTGRES_DB: relay_social_db
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+
+        ports:
+            - "5434:5432"
+
+        volumes:
+            - social-db-data:/var/lib/postgresql/data
+
+    auth-service:
+        build:
+            context: ./AuthService
+            dockerfile: AuthService.Api/Dockerfile
+
+        container_name: relay-auth-service
+        restart: unless-stopped
+
+        depends_on:
+            - auth-db
+
+        environment:
+            ASPNETCORE_ENVIRONMENT: Development
+            ConnectionStrings__DefaultConnection: Host=auth-db;Port=5432;Database=relay_auth_db;Username=postgres;Password=postgres
+
+        ports:
+            - "5001:8080"
+
 volumes:
     auth-db-data:
+    social-db-data:
