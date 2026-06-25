@@ -1,6 +1,8 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SocialService.Application.Persistence;
 using SocialService.Application.Security;
 
 namespace SocialService.Api;
@@ -13,6 +15,12 @@ public class Program
         
         builder.Services.AddControllers();
         builder.Services.AddAuthorization();
+        
+        // Configure PostgreSQL database context
+        builder.Services.AddDbContext<SocialDbContext>(options =>
+        {
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+        });
         
         // Configure JWT settings from appsettings.json
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
