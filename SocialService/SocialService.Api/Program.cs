@@ -1,9 +1,14 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SocialService.Application.Clients;
+using SocialService.Application.Interfaces;
 using SocialService.Application.Persistence;
-using SocialService.Application.Security;
+using SocialService.Application.Repositories;
+using SocialService.Application.Services;
+using SocialService.Application.Settings;
 
 namespace SocialService.Api;
 
@@ -14,7 +19,15 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddControllers();
+        builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+        builder.Services.AddScoped<FriendshipService>();
         builder.Services.AddAuthorization();
+        
+        builder.Services.AddHttpClient<AuthClient>((provider, client) =>
+        {
+            var serviceUrls = provider.GetRequiredService<IOptions<ServiceUrls>>().Value;
+            client.BaseAddress = new Uri(serviceUrls.Auth);
+        });
         
         // Configure PostgreSQL database context
         builder.Services.AddDbContext<SocialDbContext>(options =>

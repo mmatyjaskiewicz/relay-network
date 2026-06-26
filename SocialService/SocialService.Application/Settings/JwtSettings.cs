@@ -1,4 +1,4 @@
-﻿namespace SocialService.Application.Security;
+﻿namespace SocialService.Application.Settings;
 
 public class JwtSettings
 {

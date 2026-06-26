@@ -1,19 +1,31 @@
-﻿using SocialService.Application.DTOs.Results;
+﻿using SocialService.Application.Clients;
+using SocialService.Application.DTOs.Results;
 using SocialService.Application.Interfaces;
 
 namespace SocialService.Application.Services;
 
-public class FriendshipService(IFriendshipRepository friendshipRepository)
+public class FriendshipService(IFriendshipRepository friendshipRepository, AuthClient authClient)
 {
-    public async Task<FriendshipResult> SendFriendRequestAsync(Guid senderId, Guid receiverId)
+    public async Task<FriendshipResult> SendFriendRequestAsync(Guid senderId, string receiverUsername)
     {
-        if(senderId == Guid.Empty || receiverId == Guid.Empty)
+        if(senderId == Guid.Empty)
         {
-            return new FriendshipResult { Success = false, Message = "Invalid user IDs." };
+            return new FriendshipResult { Success = false, Message = "Invalid sender ID." };
         }
         
-        // Implement logic to check if receiver exists
-        // PLACEHOLDER
+        if(string.IsNullOrWhiteSpace(receiverUsername))
+        {
+            return new FriendshipResult { Success = false, Message = "Receiver username cannot be empty." };
+        }
+        
+        var receiverExists = await authClient.UserExistsAsync(receiverUsername);
+        if (!receiverExists)
+        {
+            return new FriendshipResult { Success = false, Message = "Receiver user does not exist." };
+        }
+        
+        var receiver = await authClient.GetUserDataAsync(receiverUsername);
+        var receiverId = receiver.Id;
         
         if (senderId == receiverId)
         {
