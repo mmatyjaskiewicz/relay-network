@@ -13,6 +13,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             
             InvalidCredentialsException => StatusCodes.Status401Unauthorized,
             
+            UserNotFoundException => StatusCodes.Status404NotFound,
+            
             _ => StatusCodes.Status500InternalServerError
         };
 
@@ -21,6 +23,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             UserAlreadyExistsException => exception.Message, 
             
             InvalidCredentialsException => exception.Message,
+            
+            UserNotFoundException => exception.Message,
             
             _ => "Internal server error"
         };

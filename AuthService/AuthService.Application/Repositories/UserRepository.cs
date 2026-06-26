@@ -17,4 +17,9 @@ public class UserRepository(AuthDbContext context) : IUserRepository
         context.Users.Add(user);
         await context.SaveChangesAsync();
     }
+    
+    public async Task<bool> UserExistsAsync(string username)
+    {
+        return await context.Users.AnyAsync(u => u.Username == username);
+    }
 }

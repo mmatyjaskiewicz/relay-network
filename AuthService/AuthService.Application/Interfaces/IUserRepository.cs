@@ -6,4 +6,5 @@ public interface IUserRepository
 {
     public Task<UserEntity?> GetUserByUsernameAsync(string username);
     public Task CreateUserAsync(UserEntity user);
+    public Task<bool> UserExistsAsync(string username);
 }
