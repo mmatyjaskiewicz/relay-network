@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.DTOs.Requests;
 using AuthService.Application.Exceptions;
+using AuthService.Application.Exceptions.Unauthorized;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Api.Controllers;
@@ -11,12 +12,8 @@ public class AuthController(Application.Services.AuthService authService) : Cont
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        var result = await authService.RegisterAsync(request);
-        if (!result.Success)
-        {
-            return BadRequest(result.Message);
-        }
-
+        await authService.RegisterAsync(request);
+        
         return Created();
     }
 
@@ -24,10 +21,6 @@ public class AuthController(Application.Services.AuthService authService) : Cont
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var result = await authService.LoginAsync(request);
-        if (!result.Success)
-        {
-            throw new InvalidCredentialsException();
-        }
         
         Response.Cookies.Append("jwt", result.Token!, new CookieOptions
         {

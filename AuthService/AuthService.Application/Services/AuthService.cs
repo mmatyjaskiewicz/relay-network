@@ -2,7 +2,9 @@
 using AuthService.Application.DTOs.Responses;
 using AuthService.Application.DTOs.Results;
 using AuthService.Application.Entities;
-using AuthService.Application.Exceptions;
+using AuthService.Application.Exceptions.Conflict;
+using AuthService.Application.Exceptions.NotFound;
+using AuthService.Application.Exceptions.Unauthorized;
 using AuthService.Application.Interfaces;
 using AuthService.Application.Security;
 using FluentValidation;
@@ -19,11 +21,7 @@ public class AuthService(IUserRepository userRepository,JwtGenerator jwtGenerato
         var existingUser = await userRepository.GetUserByUsernameAsync(request.Username);
         if (existingUser != null)
         {
-            return new RegisterResult
-            {
-                Success = false,
-                Message = "Username already exists."
-            };
+            throw new UserAlreadyExistsException(request.Username);
         }
         
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -51,11 +49,7 @@ public class AuthService(IUserRepository userRepository,JwtGenerator jwtGenerato
         var user = await userRepository.GetUserByUsernameAsync(request.Username);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            return new LoginResult
-            {
-                Success = false,
-                Message = "Invalid username or password."
-            };
+            throw new InvalidCredentialsException();
         }
         
         string token = jwtGenerator.GenerateToken(user);
