@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using SocialService.Api.Exceptions;
 using SocialService.Application.Clients;
 using SocialService.Application.Interfaces;
 using SocialService.Application.Persistence;
@@ -78,6 +79,10 @@ public class Program
                     ClockSkew = TimeSpan.Zero
                 };
             });
+        
+        // Add global exception handling
+        builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+        builder.Services.AddProblemDetails();
         
         // Build the application
         var app = builder.Build();
