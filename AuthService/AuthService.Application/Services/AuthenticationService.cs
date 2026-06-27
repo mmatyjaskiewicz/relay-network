@@ -1,9 +1,7 @@
 ﻿using AuthService.Application.DTOs.Requests;
-using AuthService.Application.DTOs.Responses;
 using AuthService.Application.DTOs.Results;
 using AuthService.Application.Entities;
 using AuthService.Application.Exceptions.Conflict;
-using AuthService.Application.Exceptions.NotFound;
 using AuthService.Application.Exceptions.Unauthorized;
 using AuthService.Application.Interfaces;
 using AuthService.Application.Security;
@@ -11,7 +9,7 @@ using FluentValidation;
 
 namespace AuthService.Application.Services;
 
-public class AuthService(IUserRepository userRepository,JwtGenerator jwtGenerator,
+public class AuthenticationService(IUserRepository userRepository,JwtGenerator jwtGenerator,
     IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator)
 {
     public async Task<RegisterResult> RegisterAsync(RegisterRequest request)
@@ -59,26 +57,6 @@ public class AuthService(IUserRepository userRepository,JwtGenerator jwtGenerato
             Success = true,
             Message = "Login successful.",
             Token = token
-        };
-    }
-    
-    public async Task<bool> UserExistsAsync(string username)
-    {
-        return await userRepository.UserExistsAsync(username);
-    }
-    
-    public async Task<GetUserResponse> GetUserByUsernameAsync(string username)
-    {
-        var user = await userRepository.GetUserByUsernameAsync(username);
-        if (user == null)
-        {
-            throw new UserNotFoundException();
-        }
-        
-        return new GetUserResponse
-        {
-            Id = user.Id,
-            Username = user.Username
         };
     }
 }

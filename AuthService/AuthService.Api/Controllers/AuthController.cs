@@ -1,18 +1,17 @@
 ﻿using AuthService.Application.DTOs.Requests;
-using AuthService.Application.Exceptions;
-using AuthService.Application.Exceptions.Unauthorized;
+using AuthService.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(Application.Services.AuthService authService) : ControllerBase
+public class AuthController(AuthenticationService authenticationService) : ControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        await authService.RegisterAsync(request);
+        await authenticationService.RegisterAsync(request);
         
         return Created();
     }
@@ -20,7 +19,7 @@ public class AuthController(Application.Services.AuthService authService) : Cont
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var result = await authService.LoginAsync(request);
+        var result = await authenticationService.LoginAsync(request);
         
         Response.Cookies.Append("jwt", result.Token!, new CookieOptions
         {

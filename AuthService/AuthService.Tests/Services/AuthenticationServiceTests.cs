@@ -10,7 +10,7 @@ using Moq;
 
 namespace AuthService.Tests.Services;
 
-public class AuthServiceTests
+public class AuthenticationServiceTests
 {
     [Fact]
     public async Task RegisterAsync_ShouldCreateUser_WhenRequestIsValid()
@@ -42,7 +42,7 @@ public class AuthServiceTests
         
         repositoryMock.Setup(r => r.GetUserByUsernameAsync(request.Username)).ReturnsAsync((UserEntity?)null);
         
-        var authService = new Application.Services.AuthService(repositoryMock.Object, jwtGenerator, registerValidatorMock.Object, loginValidatorMock.Object);
+        var authService = new Application.Services.AuthenticationService(repositoryMock.Object, jwtGenerator, registerValidatorMock.Object, loginValidatorMock.Object);
         
         await authService.RegisterAsync(request);
         
@@ -72,7 +72,7 @@ public class AuthServiceTests
 
         var jwtGenerator = new JwtGenerator(jwtSettings);
 
-        var authService = new Application.Services.AuthService(repositoryMock.Object, jwtGenerator, registerValidatorMock.Object, loginValidatorMock.Object);
+        var authService = new Application.Services.AuthenticationService(repositoryMock.Object, jwtGenerator, registerValidatorMock.Object, loginValidatorMock.Object);
 
         var request = new RegisterRequest
         {
@@ -118,7 +118,7 @@ public class AuthServiceTests
 
         var jwtGenerator = new JwtGenerator(jwtSettings);
 
-        var authService = new Application.Services.AuthService(
+        var authService = new Application.Services.AuthenticationService(
             repositoryMock.Object,
             jwtGenerator,
             registerValidatorMock.Object,
@@ -174,7 +174,7 @@ public class AuthServiceTests
 
         var jwtGenerator = new JwtGenerator(jwtSettings);
 
-        var authService = new Application.Services.AuthService(
+        var authService = new Application.Services.AuthenticationService(
             repositoryMock.Object,
             jwtGenerator,
             registerValidatorMock.Object,
@@ -222,7 +222,7 @@ public class AuthServiceTests
 
         var jwtGenerator = new JwtGenerator(jwtSettings);
 
-        var authService = new Application.Services.AuthService(
+        var authService = new Application.Services.AuthenticationService(
             repositoryMock.Object,
             jwtGenerator,
             registerValidatorMock.Object,

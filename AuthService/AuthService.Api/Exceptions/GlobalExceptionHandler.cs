@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AuthService.Application.Exceptions;
+﻿using AuthService.Application.Exceptions;
 using AuthService.Application.Exceptions.Conflict;
 using AuthService.Application.Exceptions.NotFound;
 using AuthService.Application.Exceptions.Unauthorized;

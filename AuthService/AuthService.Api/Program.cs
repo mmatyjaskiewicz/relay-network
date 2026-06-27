@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using AuthService.Application.Persistence;
 using AuthService.Application.Repositories;
 using AuthService.Application.Security;
+using AuthService.Application.Services;
 using AuthService.Application.Validators;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,7 +23,7 @@ public class Program
         builder.Services.AddAuthorization();
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<Application.Services.AuthService>();
+        builder.Services.AddScoped<AuthenticationService>();
         builder.Services.AddScoped<JwtGenerator>();
         
         // Configure PostgreSQL database context
