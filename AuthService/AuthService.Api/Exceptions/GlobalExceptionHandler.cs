@@ -1,4 +1,8 @@
-﻿using AuthService.Application.Exceptions;
+﻿using System.ComponentModel.DataAnnotations;
+using AuthService.Application.Exceptions;
+using AuthService.Application.Exceptions.Conflict;
+using AuthService.Application.Exceptions.NotFound;
+using AuthService.Application.Exceptions.Unauthorized;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace AuthService.Api.Exceptions;
@@ -9,23 +13,15 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         var statusCode = exception switch
         {
-            UserAlreadyExistsException => StatusCodes.Status409Conflict,
-            
-            InvalidCredentialsException => StatusCodes.Status401Unauthorized,
-            
-            UserNotFoundException => StatusCodes.Status404NotFound,
-            
+            NotFoundException => StatusCodes.Status404NotFound,
+            ConflictException => StatusCodes.Status409Conflict,
+            UnauthorizedException => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
-
+        
         var message = exception switch
         {
-            UserAlreadyExistsException => exception.Message, 
-            
-            InvalidCredentialsException => exception.Message,
-            
-            UserNotFoundException => exception.Message,
-            
+            AppException => exception.Message,
             _ => "Internal server error"
         };
 
