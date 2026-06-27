@@ -47,4 +47,26 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         await friendshipRepository.SendFriendRequestAsync(senderId, receiverId);
         return new FriendshipResult { Success = true, Message = "Friend request sent successfully." };
     }
+    
+    public async Task<FriendshipResult> AcceptFriendRequestAsync(Guid requestId)
+    {
+        if(requestId == Guid.Empty)
+        {
+            return new FriendshipResult { Success = false, Message = "Invalid request ID." };
+        }
+        
+        var requestExists = await friendshipRepository.FriendRequestExistsByIdAsync(requestId);
+        if (!requestExists)
+        {
+            return new FriendshipResult { Success = false, Message = "Friend request does not exist." };
+        }
+        
+        var success = await friendshipRepository.AcceptFriendRequestAsync(requestId);
+        if (!success)
+        {
+            return new FriendshipResult { Success = false, Message = "Failed to accept friend request." };
+        }
+        
+        return new FriendshipResult { Success = true, Message = "Friend request accepted successfully." };
+    }
 }

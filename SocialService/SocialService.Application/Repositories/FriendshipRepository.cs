@@ -25,17 +25,25 @@ public class FriendshipRepository(SocialDbContext dbContext) : IFriendshipReposi
     public async Task<bool> AcceptFriendRequestAsync(Guid requestId)
     {
         var friendRequest = await dbContext.FriendRequests.FindAsync(requestId);
-        if (friendRequest == null) return false;
-
-        var friendship = new FriendshipEntity
+        
+        var friendship1 = new FriendshipEntity
         {
             Id = Guid.NewGuid(),
-            UserId = friendRequest.SenderId,
+            UserId = friendRequest!.SenderId,
             FriendId = friendRequest.ReceiverId,
             CreatedAt = DateTime.UtcNow
         };
+        
+        var friendship2 = new FriendshipEntity
+        {
+            Id = Guid.NewGuid(),
+            UserId = friendRequest.ReceiverId,
+            FriendId = friendRequest.SenderId,
+            CreatedAt = DateTime.UtcNow
+        };
 
-        await dbContext.Friendships.AddAsync(friendship);
+        await dbContext.Friendships.AddAsync(friendship1);
+        await dbContext.Friendships.AddAsync(friendship2);
         dbContext.FriendRequests.Remove(friendRequest);
         await dbContext.SaveChangesAsync();
         return true;
@@ -59,5 +67,10 @@ public class FriendshipRepository(SocialDbContext dbContext) : IFriendshipReposi
     public Task<bool> FriendRequestExistsAsync(Guid senderId, Guid receiverId)
     {
         return dbContext.FriendRequests.AnyAsync(fr => fr.SenderId == senderId && fr.ReceiverId == receiverId || fr.SenderId == receiverId && fr.ReceiverId == senderId);
+    }
+    
+    public async Task<bool> FriendRequestExistsByIdAsync(Guid requestId)
+    {
+        return await dbContext.FriendRequests.AnyAsync(fr => fr.Id == requestId);
     }
 }
