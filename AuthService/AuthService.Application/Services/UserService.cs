@@ -8,6 +8,11 @@ public class UserService(IUserRepository userRepository)
 {
     public async Task<bool> UserExistsAsync(string username)
     {
+        if(username == null)
+        {
+            throw new ArgumentNullException(nameof(username));
+        }
+        
         return await userRepository.UserExistsAsync(username);
     }
     
