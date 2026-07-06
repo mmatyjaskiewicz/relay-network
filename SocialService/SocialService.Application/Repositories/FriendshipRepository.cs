@@ -59,6 +59,25 @@ public class FriendshipRepository(SocialDbContext dbContext) : IFriendshipReposi
         return true;
     }
     
+    public async Task<bool> RemoveFriendshipAsync(Guid userId, Guid friendId)
+    {
+        var friendship1 = await dbContext.Friendships.FirstOrDefaultAsync(f => f.UserId == userId && f.FriendId == friendId);
+        var friendship2 = await dbContext.Friendships.FirstOrDefaultAsync(f => f.UserId == friendId && f.FriendId == userId);
+
+        if (friendship1 != null)
+        {
+            dbContext.Friendships.Remove(friendship1);
+        }
+
+        if (friendship2 != null)
+        {
+            dbContext.Friendships.Remove(friendship2);
+        }
+
+        await dbContext.SaveChangesAsync();
+        return true;
+    }
+    
     public async Task<bool> FriendshipExistsAsync(Guid userId, Guid friendId)
     {
         return await dbContext.Friendships.AnyAsync(f => (f.UserId == userId && f.FriendId == friendId) || (f.UserId == friendId && f.FriendId == userId));

@@ -1,4 +1,5 @@
 ﻿using SocialService.Application.Clients;
+using SocialService.Application.DTOs.Requests;
 using SocialService.Application.DTOs.Results;
 using SocialService.Application.Interfaces;
 
@@ -90,5 +91,30 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         }
         
         return new FriendshipResult { Success = true, Message = "Friend request declined successfully." };
+    }
+    
+    public async Task<FriendshipResult> RemoveFriendshipAsync(Guid userId, RemoveFriendshipRequest request)
+    {
+        var friendEntity = await authClient.GetUserDataAsync(request.Username);
+        var friendId = friendEntity.Id;
+        
+        if(userId == Guid.Empty || friendId == Guid.Empty)
+        {
+            return new FriendshipResult { Success = false, Message = "Invalid user ID or friend ID." };
+        }
+        
+        var existingFriendship = await friendshipRepository.FriendshipExistsAsync(userId, friendId);
+        if (!existingFriendship)
+        {
+            return new FriendshipResult { Success = false, Message = "Friendship does not exist." };
+        }
+        
+        var success = await friendshipRepository.RemoveFriendshipAsync(userId, friendId);
+        if (!success)
+        {
+            return new FriendshipResult { Success = false, Message = "Failed to remove friendship." };
+        }
+        
+        return new FriendshipResult { Success = true, Message = "Friendship removed successfully." };
     }
 }
