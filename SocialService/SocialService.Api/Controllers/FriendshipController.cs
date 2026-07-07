@@ -37,8 +37,8 @@ public class FriendshipController(FriendshipService friendshipService) : Control
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
-    [HttpDelete("remove-friend/{friendId}")]
-    public async Task<IActionResult> RemoveFriendship([FromRoute] RemoveFriendshipDto request)
+    [HttpDelete("remove-friend")]
+    public async Task<IActionResult> RemoveFriendship([FromBody] RemoveFriendshipDto request)
     {
         var userId = User.FindFirst("userId")?.Value;
         if (userId == null)

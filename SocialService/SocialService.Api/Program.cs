@@ -36,6 +36,9 @@ public class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
         
+        // Configure service URLs
+        builder.Services.Configure<ServiceUrls>(builder.Configuration.GetSection("ServiceUrls"));
+        
         // Configure JWT settings from appsettings.json
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
