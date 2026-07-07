@@ -7,25 +7,25 @@ namespace SocialService.Application.Services;
 
 public class FriendshipService(IFriendshipRepository friendshipRepository, AuthClient authClient)
 {
-    public async Task<FriendshipResult> SendFriendRequestAsync(Guid senderId, string receiverUsername)
+    public async Task<FriendshipResult> SendFriendRequestAsync(Guid senderId, SendFriendRequestDto  request)
     {
         if(senderId == Guid.Empty)
         {
             return new FriendshipResult { Success = false, Message = "Invalid sender ID." };
         }
         
-        if(string.IsNullOrWhiteSpace(receiverUsername))
+        if(string.IsNullOrWhiteSpace(request.Username))
         {
             return new FriendshipResult { Success = false, Message = "Receiver username cannot be empty." };
         }
         
-        var receiverExists = await authClient.UserExistsAsync(receiverUsername);
+        var receiverExists = await authClient.UserExistsAsync(request.Username);
         if (!receiverExists)
         {
             return new FriendshipResult { Success = false, Message = "Receiver user does not exist." };
         }
         
-        var receiver = await authClient.GetUserDataAsync(receiverUsername);
+        var receiver = await authClient.GetUserDataAsync(request.Username);
         var receiverId = receiver.Id;
         
         if (senderId == receiverId)
@@ -93,9 +93,9 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         return new FriendshipResult { Success = true, Message = "Friend request declined successfully." };
     }
     
-    public async Task<FriendshipResult> RemoveFriendshipAsync(Guid userId, RemoveFriendshipRequest request)
+    public async Task<FriendshipResult> RemoveFriendshipAsync(Guid userId, RemoveFriendshipDto dto)
     {
-        var friendEntity = await authClient.GetUserDataAsync(request.Username);
+        var friendEntity = await authClient.GetUserDataAsync(dto.Username);
         var friendId = friendEntity.Id;
         
         if(userId == Guid.Empty || friendId == Guid.Empty)
