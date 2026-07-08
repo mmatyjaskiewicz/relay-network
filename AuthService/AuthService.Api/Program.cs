@@ -24,7 +24,7 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<AuthenticationService>();
-        builder.Services.AddScoped<JwtGenerator>();
+        builder.Services.AddSingleton<JwtGenerator>();
         
         // Configure PostgreSQL database context
         builder.Services.AddDbContext<AuthDbContext>(options =>
@@ -70,8 +70,8 @@ public class Program
                     ValidateIssuer = true,
                     ValidateAudience = true,
 
-                    ValidIssuer = builder.Configuration[jwtSettings.Issuer],
-                    ValidAudience = builder.Configuration[jwtSettings.Audience],
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
 
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
@@ -92,6 +92,7 @@ public class Program
         
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
         
         app.MapControllers();
