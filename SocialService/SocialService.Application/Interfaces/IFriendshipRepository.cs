@@ -1,4 +1,6 @@
-﻿namespace SocialService.Application.Interfaces;
+﻿using SocialService.Application.Entities;
+
+namespace SocialService.Application.Interfaces;
 
 public interface IFriendshipRepository
 {
@@ -9,4 +11,5 @@ public interface IFriendshipRepository
     public Task<bool> FriendshipExistsAsync(Guid userId, Guid friendId);
     public Task<bool> FriendRequestExistsAsync(Guid senderId, Guid receiverId);
     public Task<bool> FriendRequestExistsByIdAsync(Guid requestId);
+    public Task<FriendRequestEntity?> GetFriendRequestByIdAsync(Guid requestId);
 }

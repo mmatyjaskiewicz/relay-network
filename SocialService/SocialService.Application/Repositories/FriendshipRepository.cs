@@ -83,13 +83,18 @@ public class FriendshipRepository(SocialDbContext dbContext) : IFriendshipReposi
         return await dbContext.Friendships.AnyAsync(f => (f.UserId == userId && f.FriendId == friendId) || (f.UserId == friendId && f.FriendId == userId));
     }
     
-    public Task<bool> FriendRequestExistsAsync(Guid senderId, Guid receiverId)
+    public async Task<bool> FriendRequestExistsAsync(Guid senderId, Guid receiverId)
     {
-        return dbContext.FriendRequests.AnyAsync(fr => fr.SenderId == senderId && fr.ReceiverId == receiverId || fr.SenderId == receiverId && fr.ReceiverId == senderId);
+        return await dbContext.FriendRequests.AnyAsync(fr => fr.SenderId == senderId && fr.ReceiverId == receiverId || fr.SenderId == receiverId && fr.ReceiverId == senderId);
     }
     
     public async Task<bool> FriendRequestExistsByIdAsync(Guid requestId)
     {
         return await dbContext.FriendRequests.AnyAsync(fr => fr.Id == requestId);
+    }
+    
+    public async Task<FriendRequestEntity?> GetFriendRequestByIdAsync(Guid requestId)
+    {
+        return await dbContext.FriendRequests.FindAsync(requestId);
     }
 }

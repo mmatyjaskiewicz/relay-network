@@ -26,14 +26,26 @@ public class FriendshipController(FriendshipService friendshipService) : Control
     [HttpPost("accept-request/{requestId}")]
     public async Task<IActionResult> AcceptFriendRequest([FromRoute] Guid requestId)
     {
-        var result = await friendshipService.AcceptFriendRequestAsync(requestId);
+        var userId = User.FindFirst("userId")?.Value;
+        if (userId == null)
+        {
+            return Unauthorized(new { Message = "Invalid or missing user ID." });
+        }
+        
+        var result = await friendshipService.AcceptFriendRequestAsync(Guid.Parse(userId), requestId);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
     [HttpPost("decline-request/{requestId}")]
     public async Task<IActionResult> DeclineFriendRequest([FromRoute] Guid requestId)
     {
-        var result = await friendshipService.DeclineFriendRequestAsync(requestId);
+        var userId = User.FindFirst("userId")?.Value;
+        if (userId == null)
+        {
+            return Unauthorized(new { Message = "Invalid or missing user ID." });
+        }
+        
+        var result = await friendshipService.DeclineFriendRequestAsync(Guid.Parse(userId), requestId);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 

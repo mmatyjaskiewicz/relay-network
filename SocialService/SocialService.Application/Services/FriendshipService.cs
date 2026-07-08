@@ -49,7 +49,7 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         return new FriendshipResult { Success = true, Message = "Friend request sent successfully." };
     }
     
-    public async Task<FriendshipResult> AcceptFriendRequestAsync(Guid requestId)
+    public async Task<FriendshipResult> AcceptFriendRequestAsync(Guid userId, Guid requestId)
     {
         if(requestId == Guid.Empty)
         {
@@ -60,6 +60,17 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         if (!requestExists)
         {
             return new FriendshipResult { Success = false, Message = "Friend request does not exist." };
+        }
+        
+        var request = await friendshipRepository.GetFriendRequestByIdAsync(requestId);
+        if (request == null)
+        {
+            return new FriendshipResult { Success = false, Message = "Friend request not found." };
+        }
+
+        if (request.ReceiverId != userId)
+        {
+            return new FriendshipResult { Success = false, Message = "You are not authorized to accept this friend request." };
         }
         
         var success = await friendshipRepository.AcceptFriendRequestAsync(requestId);
@@ -71,7 +82,7 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         return new FriendshipResult { Success = true, Message = "Friend request accepted successfully." };
     }
     
-    public async Task<FriendshipResult> DeclineFriendRequestAsync(Guid requestId)
+    public async Task<FriendshipResult> DeclineFriendRequestAsync(Guid userId, Guid requestId)
     {
         if(requestId == Guid.Empty)
         {
@@ -82,6 +93,17 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         if (!requestExists)
         {
             return new FriendshipResult { Success = false, Message = "Friend request does not exist." };
+        }
+        
+        var request = await friendshipRepository.GetFriendRequestByIdAsync(requestId);
+        if (request == null)
+        {
+            return new FriendshipResult { Success = false, Message = "Friend request not found." };
+        }
+
+        if (request.ReceiverId != userId)
+        {
+            return new FriendshipResult { Success = false, Message = "You are not authorized td decline this friend request." };
         }
         
         var success = await friendshipRepository.DeclineFriendRequestAsync(requestId);
