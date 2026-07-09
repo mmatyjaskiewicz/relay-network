@@ -1,6 +1,5 @@
 ﻿using SocialService.Application.Clients;
 using SocialService.Application.DTOs.Requests;
-using SocialService.Application.DTOs.Results;
 using SocialService.Application.Exceptions.Conflict;
 using SocialService.Application.Exceptions.Forbidden;
 using SocialService.Application.Exceptions.NotFound;

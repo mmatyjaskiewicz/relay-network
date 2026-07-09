@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using SocialService.Application.DTOs.External;
-using SocialService.Application.Settings;
 
 namespace SocialService.Application.Clients;
 
