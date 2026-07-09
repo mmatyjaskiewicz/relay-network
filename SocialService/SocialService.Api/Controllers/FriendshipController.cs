@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
-using SocialService.Application.Clients;
+﻿using Microsoft.AspNetCore.Mvc;
 using SocialService.Application.DTOs.Requests;
 using SocialService.Application.Services;
 
@@ -19,8 +17,8 @@ public class FriendshipController(FriendshipService friendshipService) : Control
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        var result = await friendshipService.SendFriendRequestAsync(Guid.Parse(senderId), request);
-        return result.Success ? Ok(result) : BadRequest(result);
+        await friendshipService.SendFriendRequestAsync(Guid.Parse(senderId), request);
+        return NoContent();
     }
 
     [HttpPost("accept-request/{requestId}")]
@@ -32,8 +30,8 @@ public class FriendshipController(FriendshipService friendshipService) : Control
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        var result = await friendshipService.AcceptFriendRequestAsync(Guid.Parse(userId), requestId);
-        return result.Success ? Ok(result) : BadRequest(result);
+        await friendshipService.AcceptFriendRequestAsync(Guid.Parse(userId), requestId);
+        return NoContent();
     }
 
     [HttpPost("decline-request/{requestId}")]
@@ -45,8 +43,8 @@ public class FriendshipController(FriendshipService friendshipService) : Control
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        var result = await friendshipService.DeclineFriendRequestAsync(Guid.Parse(userId), requestId);
-        return result.Success ? Ok(result) : BadRequest(result);
+        await friendshipService.DeclineFriendRequestAsync(Guid.Parse(userId), requestId);
+        return NoContent();
     }
 
     [HttpDelete("remove-friend")]
@@ -58,8 +56,7 @@ public class FriendshipController(FriendshipService friendshipService) : Control
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        var result = await friendshipService.RemoveFriendshipAsync(Guid.Parse(userId), request);
-        
-        return result.Success ? Ok(result) : BadRequest(result);
+        await friendshipService.RemoveFriendshipAsync(Guid.Parse(userId), request);
+        return NoContent();
     }
 }

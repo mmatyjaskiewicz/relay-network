@@ -1,28 +1,34 @@
 ﻿using SocialService.Application.Clients;
 using SocialService.Application.DTOs.Requests;
 using SocialService.Application.DTOs.Results;
+using SocialService.Application.Exceptions.Conflict;
+using SocialService.Application.Exceptions.Forbidden;
+using SocialService.Application.Exceptions.NotFound;
+using SocialService.Application.Exceptions.Validation;
 using SocialService.Application.Interfaces;
 
 namespace SocialService.Application.Services;
 
 public class FriendshipService(IFriendshipRepository friendshipRepository, AuthClient authClient)
 {
-    public async Task<FriendshipResult> SendFriendRequestAsync(Guid senderId, SendFriendRequestDto  request)
+    public async Task SendFriendRequestAsync(Guid senderId, SendFriendRequestDto  request)
     {
+        // TODO: Add validation through FluentValidation in the future.
         if(senderId == Guid.Empty)
         {
-            return new FriendshipResult { Success = false, Message = "Invalid sender ID." };
+            throw new ValidationException("Invalid sender ID.");
         }
         
+        // TODO: Add validation through FluentValidation in the future.
         if(string.IsNullOrWhiteSpace(request.Username))
         {
-            return new FriendshipResult { Success = false, Message = "Receiver username cannot be empty." };
+            throw new ValidationException("Username cannot be empty.");
         }
         
         var receiverExists = await authClient.UserExistsAsync(request.Username);
         if (!receiverExists)
         {
-            return new FriendshipResult { Success = false, Message = "Receiver user does not exist." };
+            throw new NotFoundException($"User '{request.Username}' does not exist.");
         }
         
         var receiver = await authClient.GetUserDataAsync(request.Username);
@@ -30,113 +36,85 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         
         if (senderId == receiverId)
         {
-            return new FriendshipResult { Success = false, Message = "Cannot send friend request to yourself." };
+            throw new ValidationException("Sender and receiver cannot be the same user.");
         }
         
         var existingFriendship = await friendshipRepository.FriendshipExistsAsync(senderId, receiverId);
         if (existingFriendship)
         {
-            return new FriendshipResult { Success = false, Message = "Friendship already exists." };
+            throw new ConflictException("Friendship already exists.");
         }
         
         var existingRequest = await friendshipRepository.FriendRequestExistsAsync(senderId, receiverId);
         if (existingRequest)
         {
-            return new FriendshipResult { Success = false, Message = "Friend request already sent." };
+            throw new ConflictException("Friend request already sent.");
         }
 
         await friendshipRepository.SendFriendRequestAsync(senderId, receiverId);
-        return new FriendshipResult { Success = true, Message = "Friend request sent successfully." };
     }
     
-    public async Task<FriendshipResult> AcceptFriendRequestAsync(Guid userId, Guid requestId)
+    public async Task AcceptFriendRequestAsync(Guid userId, Guid requestId)
     {
+        // TODO: Add validation through FluentValidation in the future.
         if(requestId == Guid.Empty)
         {
-            return new FriendshipResult { Success = false, Message = "Invalid request ID." };
-        }
-        
-        var requestExists = await friendshipRepository.FriendRequestExistsByIdAsync(requestId);
-        if (!requestExists)
-        {
-            return new FriendshipResult { Success = false, Message = "Friend request does not exist." };
+            throw new ValidationException("Invalid request ID.");
         }
         
         var request = await friendshipRepository.GetFriendRequestByIdAsync(requestId);
         if (request == null)
         {
-            return new FriendshipResult { Success = false, Message = "Friend request not found." };
+            throw new NotFoundException("Friend request not found.");
         }
 
         if (request.ReceiverId != userId)
         {
-            return new FriendshipResult { Success = false, Message = "You are not authorized to accept this friend request." };
+            throw new ForbiddenException("You are not authorized to accept this friend request.");
         }
         
-        var success = await friendshipRepository.AcceptFriendRequestAsync(requestId);
-        if (!success)
-        {
-            return new FriendshipResult { Success = false, Message = "Failed to accept friend request." };
-        }
-        
-        return new FriendshipResult { Success = true, Message = "Friend request accepted successfully." };
+        await friendshipRepository.AcceptFriendRequestAsync(requestId);
     }
     
-    public async Task<FriendshipResult> DeclineFriendRequestAsync(Guid userId, Guid requestId)
+    public async Task DeclineFriendRequestAsync(Guid userId, Guid requestId)
     {
+        // TODO: Add validation through FluentValidation in the future.
         if(requestId == Guid.Empty)
         {
-            return new FriendshipResult { Success = false, Message = "Invalid request ID." };
-        }
-        
-        var requestExists = await friendshipRepository.FriendRequestExistsByIdAsync(requestId);
-        if (!requestExists)
-        {
-            return new FriendshipResult { Success = false, Message = "Friend request does not exist." };
+            throw new ValidationException("Invalid request ID.");
         }
         
         var request = await friendshipRepository.GetFriendRequestByIdAsync(requestId);
         if (request == null)
         {
-            return new FriendshipResult { Success = false, Message = "Friend request not found." };
+            throw new NotFoundException("Friend request not found.");
         }
 
         if (request.ReceiverId != userId)
         {
-            return new FriendshipResult { Success = false, Message = "You are not authorized td decline this friend request." };
+            throw new ForbiddenException("You are not authorized to decline this friend request.");
         }
         
-        var success = await friendshipRepository.DeclineFriendRequestAsync(requestId);
-        if (!success)
-        {
-            return new FriendshipResult { Success = false, Message = "Failed to decline friend request." };
-        }
-        
-        return new FriendshipResult { Success = true, Message = "Friend request declined successfully." };
+        await friendshipRepository.DeclineFriendRequestAsync(requestId);
     }
     
-    public async Task<FriendshipResult> RemoveFriendshipAsync(Guid userId, RemoveFriendshipDto dto)
+    public async Task RemoveFriendshipAsync(Guid userId, RemoveFriendshipDto dto)
     {
         var friendEntity = await authClient.GetUserDataAsync(dto.Username);
         var friendId = friendEntity.Id;
         
+        // TODO: Add validation through FluentValidation in the future.
         if(userId == Guid.Empty || friendId == Guid.Empty)
         {
-            return new FriendshipResult { Success = false, Message = "Invalid user ID or friend ID." };
+            throw new ValidationException("Invalid user ID or friend ID.");
         }
         
         var existingFriendship = await friendshipRepository.FriendshipExistsAsync(userId, friendId);
         if (!existingFriendship)
         {
-            return new FriendshipResult { Success = false, Message = "Friendship does not exist." };
+            throw new NotFoundException("Friendship does not exist.");
         }
         
-        var success = await friendshipRepository.RemoveFriendshipAsync(userId, friendId);
-        if (!success)
-        {
-            return new FriendshipResult { Success = false, Message = "Failed to remove friendship." };
-        }
-        
-        return new FriendshipResult { Success = true, Message = "Friendship removed successfully." };
+        await friendshipRepository.RemoveFriendshipAsync(userId, friendId);
     }
 }

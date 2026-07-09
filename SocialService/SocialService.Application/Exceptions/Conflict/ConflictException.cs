@@ -1,6 +1,3 @@
 ﻿namespace SocialService.Application.Exceptions.Conflict;
 
-public class ConflictException
-{
-    
-}
+public class ConflictException(string message) : AppException(message) { }

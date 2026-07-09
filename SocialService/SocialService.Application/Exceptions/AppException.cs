@@ -1,6 +1,3 @@
 ﻿namespace SocialService.Application.Exceptions;
 
-public class AppException
-{
-    
-}
+public class AppException(string message) : Exception(message) { }

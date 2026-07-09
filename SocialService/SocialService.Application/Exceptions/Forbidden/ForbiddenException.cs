@@ -1,6 +1,3 @@
 ﻿namespace SocialService.Application.Exceptions.Forbidden;
 
-public class ForbiddenException
-{
-    
-}
+public class ForbiddenException(string message) : AppException(message) { }

@@ -1,6 +1,3 @@
 ﻿namespace SocialService.Application.Exceptions.NotFound;
 
-public class NotFoundException
-{
-    
-}
+public class NotFoundException(string message) : AppException(message) { }
