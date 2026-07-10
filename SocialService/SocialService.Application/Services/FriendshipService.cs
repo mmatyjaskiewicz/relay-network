@@ -53,15 +53,15 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         await friendshipRepository.SendFriendRequestAsync(senderId, receiverId);
     }
     
-    public async Task AcceptFriendRequestAsync(Guid userId, Guid requestId)
+    public async Task AcceptFriendRequestAsync(Guid userId, AcceptFriendRequestDto dto)
     {
         // TODO: Add validation through FluentValidation in the future.
-        if(requestId == Guid.Empty)
+        if(dto.RequestId == Guid.Empty)
         {
             throw new ValidationException("Invalid request ID.");
         }
         
-        var request = await friendshipRepository.GetFriendRequestByIdAsync(requestId);
+        var request = await friendshipRepository.GetFriendRequestByIdAsync(dto.RequestId);
         if (request == null)
         {
             throw new NotFoundException("Friend request not found.");
@@ -72,18 +72,18 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
             throw new ForbiddenException("You are not authorized to accept this friend request.");
         }
         
-        await friendshipRepository.AcceptFriendRequestAsync(requestId);
+        await friendshipRepository.AcceptFriendRequestAsync(dto.RequestId);
     }
     
-    public async Task DeclineFriendRequestAsync(Guid userId, Guid requestId)
+    public async Task DeclineFriendRequestAsync(Guid userId, DeclineFriendRequestDto dto)
     {
         // TODO: Add validation through FluentValidation in the future.
-        if(requestId == Guid.Empty)
+        if(dto.RequestId == Guid.Empty)
         {
             throw new ValidationException("Invalid request ID.");
         }
         
-        var request = await friendshipRepository.GetFriendRequestByIdAsync(requestId);
+        var request = await friendshipRepository.GetFriendRequestByIdAsync(dto.RequestId);
         if (request == null)
         {
             throw new NotFoundException("Friend request not found.");
@@ -94,7 +94,7 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
             throw new ForbiddenException("You are not authorized to decline this friend request.");
         }
         
-        await friendshipRepository.DeclineFriendRequestAsync(requestId);
+        await friendshipRepository.DeclineFriendRequestAsync(dto.RequestId);
     }
     
     public async Task RemoveFriendshipAsync(Guid userId, RemoveFriendshipDto dto)

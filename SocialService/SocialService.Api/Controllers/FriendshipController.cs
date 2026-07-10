@@ -21,8 +21,8 @@ public class FriendshipController(FriendshipService friendshipService) : Control
         return NoContent();
     }
 
-    [HttpPost("accept-request/{requestId}")]
-    public async Task<IActionResult> AcceptFriendRequest([FromRoute] Guid requestId)
+    [HttpPost("accept-request")]
+    public async Task<IActionResult> AcceptFriendRequest([FromBody] AcceptFriendRequestDto request)
     {
         var userId = User.FindFirst("userId")?.Value;
         if (userId == null)
@@ -30,12 +30,12 @@ public class FriendshipController(FriendshipService friendshipService) : Control
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        await friendshipService.AcceptFriendRequestAsync(Guid.Parse(userId), requestId);
+        await friendshipService.AcceptFriendRequestAsync(Guid.Parse(userId), request);
         return NoContent();
     }
 
-    [HttpPost("decline-request/{requestId}")]
-    public async Task<IActionResult> DeclineFriendRequest([FromRoute] Guid requestId)
+    [HttpPost("decline-request")]
+    public async Task<IActionResult> DeclineFriendRequest([FromBody] DeclineFriendRequestDto request)
     {
         var userId = User.FindFirst("userId")?.Value;
         if (userId == null)
@@ -43,7 +43,7 @@ public class FriendshipController(FriendshipService friendshipService) : Control
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        await friendshipService.DeclineFriendRequestAsync(Guid.Parse(userId), requestId);
+        await friendshipService.DeclineFriendRequestAsync(Guid.Parse(userId), request);
         return NoContent();
     }
 
