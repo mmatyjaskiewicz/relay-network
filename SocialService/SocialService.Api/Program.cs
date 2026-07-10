@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SocialService.Api.Exceptions;
+using SocialService.Api.Filters;
 using SocialService.Application.Clients;
 using SocialService.Application.Interfaces;
 using SocialService.Application.Persistence;
@@ -20,10 +21,15 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        builder.Services.AddControllers();
         builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
         builder.Services.AddScoped<FriendshipService>();
-        builder.Services.AddAuthorization();
+        builder.Services.AddScoped<ValidationFilter>();
+        
+        // Add controllers with validation filter
+        builder.Services.AddControllers(options =>
+        {
+            options.Filters.Add<ValidationFilter>();
+        });
         
         builder.Services.AddHttpClient<AuthClient>((provider, client) =>
         {
