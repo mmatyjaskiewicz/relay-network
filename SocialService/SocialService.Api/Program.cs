@@ -1,4 +1,5 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,9 @@ public class Program
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+        
+        // Register FluentValidation validators from the assembly
+        builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         
         // Configure service URLs
         builder.Services.Configure<ServiceUrls>(builder.Configuration.GetSection("ServiceUrls"));
