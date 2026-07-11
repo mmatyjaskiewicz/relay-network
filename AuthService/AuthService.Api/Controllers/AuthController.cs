@@ -19,9 +19,9 @@ public class AuthController(AuthenticationService authenticationService) : Contr
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var result = await authenticationService.LoginAsync(request);
+        var token = await authenticationService.LoginAsync(request);
         
-        Response.Cookies.Append("jwt", result.Token!, new CookieOptions
+        Response.Cookies.Append("jwt", token, new CookieOptions
         {
             HttpOnly = true,
             Secure = false,
@@ -29,6 +29,6 @@ public class AuthController(AuthenticationService authenticationService) : Contr
             Expires = DateTimeOffset.UtcNow.AddHours(1)
         });
         
-        return Ok(result.Token);
+        return Ok(token);
     }
 }

@@ -21,7 +21,7 @@ public class UserService(IUserRepository userRepository)
         var user = await userRepository.GetUserByUsernameAsync(username);
         if (user == null)
         {
-            throw new UserNotFoundException();
+            throw new NotFoundException("User not found.");
         }
         
         return new GetUserResponse
