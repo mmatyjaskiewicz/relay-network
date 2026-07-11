@@ -1,4 +1,5 @@
 ﻿using AuthService.Application.DTOs.Responses;
+using AuthService.Application.Exceptions.BadRequest;
 using AuthService.Application.Exceptions.NotFound;
 using AuthService.Application.Interfaces;
 
@@ -10,7 +11,7 @@ public class UserService(IUserRepository userRepository)
     {
         if(username == null)
         {
-            throw new ArgumentNullException(nameof(username));
+            throw new BadRequestException("Username cannot be null.");
         }
         
         return await userRepository.UserExistsAsync(username);

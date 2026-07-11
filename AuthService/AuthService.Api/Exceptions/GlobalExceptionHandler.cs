@@ -1,4 +1,5 @@
 ﻿using AuthService.Application.Exceptions;
+using AuthService.Application.Exceptions.BadRequest;
 using AuthService.Application.Exceptions.Conflict;
 using AuthService.Application.Exceptions.NotFound;
 using AuthService.Application.Exceptions.Unauthorized;
@@ -12,8 +13,9 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         var statusCode = exception switch
         {
-            NotFoundException => StatusCodes.Status404NotFound,
+            BadRequestException => StatusCodes.Status400BadRequest,
             ConflictException => StatusCodes.Status409Conflict,
+            NotFoundException => StatusCodes.Status404NotFound,
             UnauthorizedException => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError
         };
