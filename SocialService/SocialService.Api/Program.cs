@@ -1,7 +1,3 @@
-using Microsoft.Extensions.Options;
-using SocialService.Api.Exceptions;
-using SocialService.Application.Clients;
-using SocialService.Application.Settings;
 using SocialService.Api.Extensions;
 
 namespace SocialService.Api;
