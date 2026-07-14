@@ -16,6 +16,7 @@ public static class ApplicationExtensions
         {
             options.Filters.Add<ValidationFilter>();
         });
+        services.AddMassTransitServices(configuration);
         
         return services;
     }
