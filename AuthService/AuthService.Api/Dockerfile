@@ -5,19 +5,29 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
-COPY ["AuthService.Api/AuthService.Api.csproj", "AuthService.Api/"]
-COPY ["AuthService.Application/AuthService.Application.csproj", "AuthService.Application/"]
-RUN dotnet restore "AuthService.Api/AuthService.Api.csproj"
+
+COPY ["AuthService/AuthService.Api/AuthService.Api.csproj", "AuthService/AuthService.Api/"]
+COPY ["AuthService/AuthService.Application/AuthService.Application.csproj", "AuthService/AuthService.Application/"]
+COPY ["Shared/Shared.Contracts/Shared.Contracts.csproj", "Shared/Shared.Contracts/"]
+
+RUN dotnet restore "AuthService/AuthService.Api/AuthService.Api.csproj"
+
 COPY . .
-WORKDIR "/src/AuthService.Api"
-RUN dotnet build "./AuthService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+WORKDIR "/src/AuthService/AuthService.Api"
+
+RUN dotnet build "AuthService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./AuthService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+RUN dotnet publish "AuthService.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
+
 COPY --from=publish /app/publish .
+
 ENTRYPOINT ["dotnet", "AuthService.Api.dll"]

@@ -33,8 +33,8 @@ services:
 
     auth-service:
         build:
-            context: ./AuthService
-            dockerfile: AuthService.Api/Dockerfile
+            context: .
+            dockerfile: AuthService/AuthService.Api/Dockerfile
 
         container_name: relay-auth-service
         restart: unless-stopped
