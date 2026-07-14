@@ -10,6 +10,7 @@ public static class ApplicationExtensions
         services.AddPersistence(configuration);
         services.AddValidation();
         services.AddExceptionHandling();
+        services.AddMassTransitServices(configuration);
 
         return services;
     }

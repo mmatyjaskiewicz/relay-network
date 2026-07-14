@@ -41,6 +41,7 @@ services:
 
         depends_on:
             - auth-db
+            - rabbitmq
 
         environment:
             ASPNETCORE_ENVIRONMENT: Development
@@ -48,6 +49,17 @@ services:
 
         ports:
             - "5001:8080"
+
+    rabbitmq:
+        image: rabbitmq:4-management
+        container_name: relay-rabbitmq
+        hostname: rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
 
 volumes:
     auth-db-data:
