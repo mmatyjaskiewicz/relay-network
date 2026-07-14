@@ -5,10 +5,12 @@ using AuthService.Application.Exceptions.Unauthorized;
 using AuthService.Application.Interfaces;
 using AuthService.Application.Security;
 using FluentValidation;
+using MassTransit;
+using Shared.Contracts.Events;
 
 namespace AuthService.Application.Services;
 
-public class AuthenticationService(IUserRepository userRepository,JwtGenerator jwtGenerator,
+public class AuthenticationService(IUserRepository userRepository,JwtGenerator jwtGenerator, IPublishEndpoint publishEndpoint,
     IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator)
 {
     public async Task RegisterAsync(RegisterRequest request)
@@ -29,8 +31,10 @@ public class AuthenticationService(IUserRepository userRepository,JwtGenerator j
             Username = request.Username,
             PasswordHash = passwordHash
         };
-
+        
         await userRepository.CreateUserAsync(user);
+        
+        await publishEndpoint.Publish(new UserRegistered(user.Id, user.Username));
     }
     
     public async Task<string> LoginAsync(LoginRequest request)

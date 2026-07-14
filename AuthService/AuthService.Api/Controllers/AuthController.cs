@@ -12,7 +12,7 @@ public class AuthController(AuthenticationService authenticationService) : Contr
     public async Task<IActionResult> Register(RegisterRequest request)
     {
         await authenticationService.RegisterAsync(request);
-        
+       
         return Created();
     }
 
