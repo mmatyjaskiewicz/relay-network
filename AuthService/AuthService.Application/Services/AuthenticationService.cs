@@ -4,19 +4,15 @@ using AuthService.Application.Exceptions.Conflict;
 using AuthService.Application.Exceptions.Unauthorized;
 using AuthService.Application.Interfaces;
 using AuthService.Application.Security;
-using FluentValidation;
 using MassTransit;
 using Shared.Contracts.Events;
 
 namespace AuthService.Application.Services;
 
-public class AuthenticationService(IUserRepository userRepository,JwtGenerator jwtGenerator, IPublishEndpoint publishEndpoint,
-    IValidator<RegisterRequest> registerValidator, IValidator<LoginRequest> loginValidator)
+public class AuthenticationService(IUserRepository userRepository,JwtGenerator jwtGenerator, IPublishEndpoint publishEndpoint)
 {
     public async Task RegisterAsync(RegisterRequest request)
     {
-        await registerValidator.ValidateAndThrowAsync(request);
-        
         var existingUser = await userRepository.GetUserByUsernameAsync(request.Username);
         if (existingUser != null)
         {
@@ -39,8 +35,6 @@ public class AuthenticationService(IUserRepository userRepository,JwtGenerator j
     
     public async Task<string> LoginAsync(LoginRequest request)
     {
-        await loginValidator.ValidateAndThrowAsync(request);
-        
         var user = await userRepository.GetUserByUsernameAsync(request.Username);
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
