@@ -14,29 +14,29 @@ public class ValidationFilter : IAsyncActionFilter
             if (argument is null)
                 continue;
 
-            var dtoType = argument.GetType();
-
-            var validatorType = typeof(IValidator<>).MakeGenericType(dtoType);
+            var validatorType = typeof(IValidator<>).MakeGenericType(argument.GetType());
 
             var validator = context.HttpContext.RequestServices.GetService(validatorType);
 
-            if (validator is null)
+            if (validator is not IValidator nonGenericValidator)
                 continue;
 
-            var validationContextType = typeof(ValidationContext<>).MakeGenericType(dtoType);
+            ValidationResult result = await nonGenericValidator.ValidateAsync(new ValidationContext<object>(argument), context.HttpContext.RequestAborted);
 
-            var validationContext = Activator.CreateInstance(validationContextType, argument);
-
-            var validateAsyncMethod = validatorType.GetMethod(nameof(IValidator.ValidateAsync));
-
-            var validationTask = (Task<ValidationResult>)validateAsyncMethod!
-                .Invoke(validator, new[] { validationContext!, context.HttpContext.RequestAborted })!;
-
-            var validationResult = await validationTask;
-
-            if (!validationResult.IsValid)
+            if (!result.IsValid)
             {
-                context.Result = new BadRequestObjectResult(validationResult.Errors);
+                var errors = result.Errors
+                    .GroupBy(x => x.PropertyName)
+                    .ToDictionary(
+                        group => group.Key,
+                        group => group.Select(x => x.ErrorMessage).ToArray());
+
+                context.Result = new BadRequestObjectResult(new
+                {
+                    Title = "Validation failed",
+                    Status = StatusCodes.Status400BadRequest,
+                    Errors = errors
+                });
 
                 return;
             }

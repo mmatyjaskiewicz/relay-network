@@ -19,10 +19,10 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         }
         
         // TODO: Add validation through FluentValidation in the future.
-        if(string.IsNullOrWhiteSpace(request.Username))
-        {
-            throw new ValidationException("Username cannot be empty.");
-        }
+        // if(string.IsNullOrWhiteSpace(request.Username))
+        // {
+        //     throw new ValidationException("Username cannot be empty.");
+        // }
         
         var receiverExists = await authClient.UserExistsAsync(request.Username);
         if (!receiverExists)

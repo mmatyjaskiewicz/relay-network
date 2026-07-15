@@ -11,6 +11,15 @@ public class GlobalExceptionHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
+        var title = exception switch
+        {
+            ConflictException => "Conflict",
+            ForbiddenException => "Forbidden",
+            NotFoundException => "Not Found",
+            ValidationException => "Validation failed",
+            _ => "Internal Server Error"
+        };
+        
         var statusCode = exception switch
         {
             ConflictException => StatusCodes.Status409Conflict,
@@ -30,7 +39,8 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         await httpContext.Response.WriteAsJsonAsync(new
         {
-            success = false,
+            Title = title,
+            Status = statusCode,
             error = message
         }, cancellationToken);
 
