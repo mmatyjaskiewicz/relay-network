@@ -44,6 +44,9 @@ services:
             - rabbitmq
 
         environment:
+            RabbitMQ__Host: rabbitmq
+            RabbitMQ_Username: guest
+            RabbitMQ_Password: guest
             ASPNETCORE_ENVIRONMENT: Development
             ConnectionStrings__DefaultConnection: Host=auth-db;Port=5432;Database=relay_auth_db;Username=postgres;Password=postgres
 
