@@ -7,6 +7,7 @@ public class SocialDbContext(DbContextOptions<SocialDbContext> options) : DbCont
 {
     public DbSet<FriendRequestEntity> FriendRequests => Set<FriendRequestEntity>();
     public DbSet<FriendshipEntity> Friendships => Set<FriendshipEntity>();
+    public DbSet<ProfileEntity> Profiles => Set<ProfileEntity>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

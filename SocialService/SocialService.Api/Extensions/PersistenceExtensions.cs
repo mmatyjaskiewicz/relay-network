@@ -15,6 +15,7 @@ public static class PersistenceExtensions
         });
         
         services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>();
 
         return services;
     }
