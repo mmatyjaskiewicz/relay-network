@@ -12,17 +12,10 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
 {
     public async Task SendFriendRequestAsync(Guid senderId, SendFriendRequestDto  request)
     {
-        // TODO: Add validation through FluentValidation in the future.
         if(senderId == Guid.Empty)
         {
             throw new ValidationException("Invalid sender ID.");
         }
-        
-        // TODO: Add validation through FluentValidation in the future.
-        // if(string.IsNullOrWhiteSpace(request.Username))
-        // {
-        //     throw new ValidationException("Username cannot be empty.");
-        // }
         
         var receiverExists = await authClient.UserExistsAsync(request.Username);
         if (!receiverExists)
@@ -55,12 +48,6 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
     
     public async Task AcceptFriendRequestAsync(Guid userId, AcceptFriendRequestDto dto)
     {
-        // TODO: Add validation through FluentValidation in the future.
-        if(dto.RequestId == Guid.Empty)
-        {
-            throw new ValidationException("Invalid request ID.");
-        }
-        
         var request = await friendshipRepository.GetFriendRequestByIdAsync(dto.RequestId);
         if (request == null)
         {
@@ -77,12 +64,6 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
     
     public async Task DeclineFriendRequestAsync(Guid userId, DeclineFriendRequestDto dto)
     {
-        // TODO: Add validation through FluentValidation in the future.
-        if(dto.RequestId == Guid.Empty)
-        {
-            throw new ValidationException("Invalid request ID.");
-        }
-        
         var request = await friendshipRepository.GetFriendRequestByIdAsync(dto.RequestId);
         if (request == null)
         {
@@ -101,12 +82,6 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
     {
         var friendEntity = await authClient.GetUserDataAsync(dto.Username);
         var friendId = friendEntity.Id;
-        
-        // TODO: Add validation through FluentValidation in the future.
-        if(userId == Guid.Empty || friendId == Guid.Empty)
-        {
-            throw new ValidationException("Invalid user ID or friend ID.");
-        }
         
         var existingFriendship = await friendshipRepository.FriendshipExistsAsync(userId, friendId);
         if (!existingFriendship)
