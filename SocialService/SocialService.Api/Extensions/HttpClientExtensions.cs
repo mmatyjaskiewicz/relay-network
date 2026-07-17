@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Minio;
 using SocialService.Application.Clients;
 using SocialService.Application.Settings;
 
@@ -18,7 +19,25 @@ public static class HttpClientsExtensions
 
             client.BaseAddress = new Uri(serviceUrls.Auth);
         });
+        return services;
+    }
+    
+    public static IServiceCollection AddMinio(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MinioSettings>(configuration.GetSection(MinioSettings.SectionName));
+
+        services.AddSingleton<IMinioClient>(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<MinioSettings>>().Value;
+
+            return new MinioClient()
+                .WithEndpoint(settings.Endpoint)
+                .WithCredentials(settings.AccessKey, settings.SecretKey)
+                .WithSSL(settings.UseSSL)
+                .Build();
+        });
 
         return services;
     }
+    
 }
