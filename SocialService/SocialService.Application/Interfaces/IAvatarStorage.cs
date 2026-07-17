@@ -1,6 +1,8 @@
-﻿namespace SocialService.Application.Interfaces;
+﻿using SocialService.Application.DTOs.Requests;
+
+namespace SocialService.Application.Interfaces;
 
 public interface IAvatarStorage
 {
-    Task<string> UploadAsync(IFormFile file, CancellationToken cancellationToken = default);
+    Task<string> UploadAsync(UploadAvatarRequest request, CancellationToken cancellationToken = default);
 }

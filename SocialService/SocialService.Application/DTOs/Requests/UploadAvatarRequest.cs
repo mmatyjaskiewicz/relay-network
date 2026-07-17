@@ -1,6 +1,3 @@
 ﻿namespace SocialService.Application.DTOs.Requests;
 
-public class UploadAvatarRequest
-{
-    
-}
+public record UploadAvatarRequest(Stream Content, string FileName, string ContentType, long Length) { }
