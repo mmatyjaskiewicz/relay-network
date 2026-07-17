@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialService.Api", "Social
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialService.Application", "SocialService.Application\SocialService.Application.csproj", "{032178F4-5883-465E-94B8-E45456298CAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialService.Tests", "SocialService.Tests\SocialService.Tests.csproj", "{53C4E88B-9C7F-4827-AF3F-55531FF98375}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Contracts", "..\Shared\Shared.Contracts\Shared.Contracts.csproj", "{4DA6C079-8F5D-44BB-957E-1EEBD954F153}"
 EndProject
 Global
@@ -22,10 +20,6 @@ Global
 		{032178F4-5883-465E-94B8-E45456298CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{032178F4-5883-465E-94B8-E45456298CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{032178F4-5883-465E-94B8-E45456298CAB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53C4E88B-9C7F-4827-AF3F-55531FF98375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53C4E88B-9C7F-4827-AF3F-55531FF98375}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53C4E88B-9C7F-4827-AF3F-55531FF98375}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53C4E88B-9C7F-4827-AF3F-55531FF98375}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4DA6C079-8F5D-44BB-957E-1EEBD954F153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4DA6C079-8F5D-44BB-957E-1EEBD954F153}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DA6C079-8F5D-44BB-957E-1EEBD954F153}.Release|Any CPU.ActiveCfg = Release|Any CPU
