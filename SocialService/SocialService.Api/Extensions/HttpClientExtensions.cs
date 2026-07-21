@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using Minio;
 using SocialService.Application.Clients;
+using SocialService.Application.Interfaces;
 using SocialService.Application.Settings;
+using SocialService.Application.Storages;
 
 namespace SocialService.Api.Extensions;
 
@@ -36,7 +38,9 @@ public static class HttpClientsExtensions
                 .WithSSL(settings.UseSSL)
                 .Build();
         });
-
+        
+        services.AddScoped<IAvatarStorage, MinioAvatarStorage>();
+        
         return services;
     }
     

@@ -2,6 +2,7 @@
 using SocialService.Application.Interfaces;
 using SocialService.Application.Persistence;
 using SocialService.Application.Repositories;
+using SocialService.Application.Storages;
 
 namespace SocialService.Api.Extensions;
 
@@ -15,7 +16,7 @@ public static class PersistenceExtensions
         });
         
         services.AddScoped<IFriendshipRepository, FriendshipRepository>();
-        services.AddScoped<IProfileRepository, ProfileRepository>();
+        services.AddScoped<IProfileRepository, ProfileRepository>(); ;
 
         return services;
     }
