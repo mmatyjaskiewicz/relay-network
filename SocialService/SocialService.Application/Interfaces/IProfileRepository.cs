@@ -6,5 +6,6 @@ public interface IProfileRepository
 {
     public Task CreateProfileAsync(ProfileEntity profile);
     public Task UpdateBioAsync(ProfileEntity profile, string bio);
+    public Task UpdateAvatarAsync(ProfileEntity profile, string avatarFileName);
     public Task<ProfileEntity> GetProfileByUserIdAsync(Guid userId);
 }

@@ -11,7 +11,7 @@ public class MinioAvatarStorage(IMinioClient minioClient, IOptions<MinioSettings
 {
     private readonly MinioSettings _settings = options.Value;
     
-    public async Task <string> UploadAsync(UploadAvatarRequest request, CancellationToken cancellationToken = default)
+    public async Task<string> UploadAsync(UploadAvatarRequest request, CancellationToken cancellationToken = default)
     {
         var objectName = $"{Guid.NewGuid()}{Path.GetExtension(request.FileName)}";
 

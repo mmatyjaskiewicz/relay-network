@@ -20,6 +20,13 @@ public class ProfileRepository(SocialDbContext context) : IProfileRepository
         await context.SaveChangesAsync();
     }
     
+    public async Task UpdateAvatarsync(ProfileEntity profile, string avatarFileName)
+    {
+        profile.AvatarFileName = avatarFileName;
+        context.Profiles.Update(profile);
+        await context.SaveChangesAsync();
+    }
+    
     public async Task<ProfileEntity> GetProfileByUserIdAsync(Guid userId)
     {
         var profile = await context.Profiles.FindAsync(userId);
