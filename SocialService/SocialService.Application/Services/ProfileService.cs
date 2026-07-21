@@ -27,7 +27,8 @@ public class ProfileService(IProfileRepository profileRepository, IAvatarStorage
             throw new NotFoundException("Profile not found.");
         }
         
-        await profileRepository.UpdateBioAsync(profile, bio);
+        profile.Bio = bio;
+        await profileRepository.UpdateProfileAsync(profile);
     }
     
     public async Task UpdateAvatarAsync(UploadAvatarRequest request, CancellationToken cancellationToken, Guid userId)
@@ -39,7 +40,8 @@ public class ProfileService(IProfileRepository profileRepository, IAvatarStorage
         }
         
         var objectName = await avatarStorage.UploadAsync(request, cancellationToken);
+        
         profile.AvatarFileName = objectName;
-        await profileRepository.UpdateAvatarAsync(profile, objectName);
+        await profileRepository.UpdateProfileAsync(profile);
     }
 }

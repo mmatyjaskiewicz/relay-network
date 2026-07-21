@@ -13,16 +13,8 @@ public class ProfileRepository(SocialDbContext context) : IProfileRepository
         await context.SaveChangesAsync();
     }
     
-    public async Task UpdateBioAsync(ProfileEntity profile, string bio)
+    public async Task UpdateProfileAsync(ProfileEntity profile)
     {
-        profile.Bio = bio;
-        context.Profiles.Update(profile);
-        await context.SaveChangesAsync();
-    }
-    
-    public async Task UpdateAvatarsync(ProfileEntity profile, string avatarFileName)
-    {
-        profile.AvatarFileName = avatarFileName;
         context.Profiles.Update(profile);
         await context.SaveChangesAsync();
     }
