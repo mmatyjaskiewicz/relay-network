@@ -53,6 +53,28 @@ services:
         ports:
             - "5001:8080"
 
+    social-service:
+        build:
+            context: .
+            dockerfile: SocialService/SocialService.Api/Dockerfile
+
+        container_name: relay-social-service
+        restart: unless-stopped
+
+        depends_on:
+            - social-db
+            - rabbitmq
+
+        environment:
+            RabbitMQ__Host: rabbitmq
+            RabbitMQ_Username: guest
+            RabbitMQ_Password: guest
+            ASPNETCORE_ENVIRONMENT: Development
+            ConnectionStrings__DefaultConnection: Host=social-db;Port=5432;Database=relay_social_db;Username=postgres;Password=postgres
+
+        ports:
+            - "5002:8080"
+
     minio:
         image: minio/minio
         container_name: relay-minio
