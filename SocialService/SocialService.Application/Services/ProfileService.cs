@@ -31,7 +31,7 @@ public class ProfileService(IProfileRepository profileRepository, IAvatarStorage
         await profileRepository.UpdateProfileAsync(profile);
     }
     
-    public async Task UpdateAvatarAsync(UploadAvatarRequest request, CancellationToken cancellationToken, Guid userId)
+    public async Task UpdateAvatarAsync(ProfileRequestDtos requestDtos, CancellationToken cancellationToken, Guid userId)
     {
         var profile = await profileRepository.GetProfileByUserIdAsync(userId);
         if (profile == null)
@@ -39,7 +39,7 @@ public class ProfileService(IProfileRepository profileRepository, IAvatarStorage
             throw new NotFoundException("Profile not found.");
         }
         
-        var objectName = await avatarStorage.UploadAsync(request, cancellationToken);
+        var objectName = await avatarStorage.UploadAsync(requestDtos, cancellationToken);
         
         profile.AvatarFileName = objectName;
         await profileRepository.UpdateProfileAsync(profile);

@@ -11,16 +11,16 @@ public class MinioAvatarStorage(IMinioClient minioClient, IOptions<MinioSettings
 {
     private readonly MinioSettings _settings = options.Value;
     
-    public async Task<string> UploadAsync(UploadAvatarRequest request, CancellationToken cancellationToken = default)
+    public async Task<string> UploadAsync(ProfileRequestDtos requestDtos, CancellationToken cancellationToken = default)
     {
-        var objectName = $"{Guid.NewGuid()}{Path.GetExtension(request.FileName)}";
+        var objectName = $"{Guid.NewGuid()}{Path.GetExtension(requestDtos.FileName)}";
 
         var putObjectArgs = new PutObjectArgs()
             .WithBucket(_settings.BucketName)
             .WithObject(objectName)
-            .WithStreamData(request.Content)
-            .WithObjectSize(request.Length)
-            .WithContentType(request.ContentType);
+            .WithStreamData(requestDtos.Content)
+            .WithObjectSize(requestDtos.Length)
+            .WithContentType(requestDtos.ContentType);
 
         await minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
 

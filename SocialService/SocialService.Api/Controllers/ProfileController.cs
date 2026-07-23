@@ -18,7 +18,7 @@ public class ProfileController(ProfileService profileService) : ControllerBase
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
 
-        await profileService.UpdateAvatarAsync(new UploadAvatarRequest(file.OpenReadStream(), file.FileName, file.ContentType, file.Length), cancellationToken, Guid.Parse(userId));
+        await profileService.UpdateAvatarAsync(new ProfileRequestDtos(file.OpenReadStream(), file.FileName, file.ContentType, file.Length), cancellationToken, Guid.Parse(userId));
         return NoContent();
     }
 
@@ -36,7 +36,7 @@ public class ProfileController(ProfileService profileService) : ControllerBase
     }
 
     [HttpPut("bio")]
-    public async Task<IActionResult> UpdateBio([FromBody] string bio)
+    public async Task<IActionResult> UpdateBio([FromBody] UpdateBioRequestDto request)
     {
         var userId = User.FindFirst("userId")?.Value;
         if (userId == null)
@@ -44,7 +44,7 @@ public class ProfileController(ProfileService profileService) : ControllerBase
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
         
-        await profileService.UpdateBioAsync(Guid.Parse(userId), bio);
+        await profileService.UpdateBioAsync(Guid.Parse(userId), request.Bio);
         return NoContent();
     }
 }
