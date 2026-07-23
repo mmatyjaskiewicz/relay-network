@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace SocialService.Application.Persistence.Migrations
+namespace AuthService.Application.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class update : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -12,8 +12,8 @@ using SocialService.Application.Persistence;
 namespace SocialService.Application.Persistence.Migrations
 {
     [DbContext(typeof(SocialDbContext))]
-    [Migration("20260625145910_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260723100735_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,36 @@ namespace SocialService.Application.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("friendships", (string)null);
+                });
+
+            modelBuilder.Entity("SocialService.Application.Entities.ProfileEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AvatarFileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Bio")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("username");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("profiles", (string)null);
                 });
 #pragma warning restore 612, 618
         }

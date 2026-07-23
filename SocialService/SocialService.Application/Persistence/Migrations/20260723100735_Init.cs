@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SocialService.Application.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,21 @@ namespace SocialService.Application.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_friendships", x => x.id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "profiles",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Bio = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    AvatarFileName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_profiles", x => x.id);
+                });
         }
 
         /// <inheritdoc />
@@ -48,6 +63,9 @@ namespace SocialService.Application.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "friendships");
+
+            migrationBuilder.DropTable(
+                name: "profiles");
         }
     }
 }
