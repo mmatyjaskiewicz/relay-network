@@ -26,4 +26,13 @@ public class MinioAvatarStorage(IMinioClient minioClient, IOptions<MinioSettings
 
         return objectName;
     }
+    
+    public async Task DeleteAsync(string objectName, CancellationToken cancellationToken = default)
+    {
+        var removeObjectArgs = new RemoveObjectArgs()
+            .WithBucket(_settings.BucketName)
+            .WithObject(objectName);
+
+        await minioClient.RemoveObjectAsync(removeObjectArgs, cancellationToken);
+    }
 }

@@ -20,4 +20,16 @@ public class ProfileController(ProfileService profileService) : ControllerBase
         await profileService.UpdateAvatarAsync(new UploadAvatarRequest(file.OpenReadStream(), file.FileName, file.ContentType, file.Length), cancellationToken, Guid.Parse(userId));
         return NoContent();
     }
-}
+    
+    [HttpDelete("avatar")]
+    public async Task<IActionResult> DeleteAvatar(CancellationToken cancellationToken)
+    {
+        var userId = User.FindFirst("userId")?.Value;
+        if (userId == null)
+        {
+            return Unauthorized(new { Message = "Invalid or missing user ID." });
+        }
+        
+        await profileService.DeleteAvatarAsync(Guid.Parse(userId), cancellationToken);
+        return NoContent();
+    }

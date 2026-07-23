@@ -44,4 +44,20 @@ public class ProfileService(IProfileRepository profileRepository, IAvatarStorage
         profile.AvatarFileName = objectName;
         await profileRepository.UpdateProfileAsync(profile);
     }
+    
+    public async Task DeleteAvatarAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var profile = await profileRepository.GetProfileByUserIdAsync(userId);
+        if (profile == null)
+        {
+            throw new NotFoundException("Profile not found.");
+        }
+        
+        if (!string.IsNullOrEmpty(profile.AvatarFileName))
+        {
+            await avatarStorage.DeleteAsync(profile.AvatarFileName, cancellationToken);
+            profile.AvatarFileName = null;
+            await profileRepository.UpdateProfileAsync(profile);
+        }
+    }
 }
