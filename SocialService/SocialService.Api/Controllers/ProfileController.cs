@@ -17,10 +17,11 @@ public class ProfileController(ProfileService profileService) : ControllerBase
         {
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
+
         await profileService.UpdateAvatarAsync(new UploadAvatarRequest(file.OpenReadStream(), file.FileName, file.ContentType, file.Length), cancellationToken, Guid.Parse(userId));
         return NoContent();
     }
-    
+
     [HttpDelete("avatar")]
     public async Task<IActionResult> DeleteAvatar(CancellationToken cancellationToken)
     {
@@ -29,7 +30,21 @@ public class ProfileController(ProfileService profileService) : ControllerBase
         {
             return Unauthorized(new { Message = "Invalid or missing user ID." });
         }
-        
+
         await profileService.DeleteAvatarAsync(Guid.Parse(userId), cancellationToken);
         return NoContent();
     }
+
+    [HttpPut("bio")]
+    public async Task<IActionResult> UpdateBio([FromBody] string bio)
+    {
+        var userId = User.FindFirst("userId")?.Value;
+        if (userId == null)
+        {
+            return Unauthorized(new { Message = "Invalid or missing user ID." });
+        }
+        
+        await profileService.UpdateBioAsync(Guid.Parse(userId), bio);
+        return NoContent();
+    }
+}
