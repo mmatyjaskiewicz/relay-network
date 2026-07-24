@@ -14,4 +14,11 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.29" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+      <Folder Include="Exceptions\" />
+      <Folder Include="Extensions\" />
+      <Folder Include="Filters\" />
+    </ItemGroup>
+
 </Project>
