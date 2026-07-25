@@ -31,6 +31,22 @@ services:
         volumes:
             - social-db-data:/var/lib/postgresql/data
 
+    chat-db:
+        image: postgres:17
+        container_name: relay-chat-db
+        restart: unless-stopped
+
+        environment:
+            POSTGRES_DB: relay_chat_db
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+
+        ports:
+            - "5435:5432"
+
+        volumes:
+            - chat-db-data:/var/lib/postgresql/data
+
     auth-service:
         build:
             context: .
@@ -104,4 +120,5 @@ services:
 volumes:
     auth-db-data:
     social-db-data:
+    chat-db-data:
     minio-data:
