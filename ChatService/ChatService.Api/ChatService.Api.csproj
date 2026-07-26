@@ -13,6 +13,15 @@
         <PackageReference Include="MassTransit.RabbitMQ" Version="9.1.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.29" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.29" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.29">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.29">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,6 +29,10 @@
       <Folder Include="Exceptions\" />
       <Folder Include="Extensions\" />
       <Folder Include="Filters\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ChatService.Application\ChatService.Application.csproj" />
     </ItemGroup>
 
 </Project>
