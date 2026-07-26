@@ -1,3 +1,4 @@
+using ChatService.Api.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatService.Api;
@@ -8,16 +9,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        builder.Services.AddDbContext<Application.Persistence.ChatDbContext>(options =>
-        {
-            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
-        
-        // Add services to the container.
-        builder.Services.AddAuthorization();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddApplicationModules(builder.Configuration);
         
         var app = builder.Build();
         
