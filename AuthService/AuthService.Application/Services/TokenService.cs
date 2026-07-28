@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace AuthService.Application.Security;
 
-public class JwtGenerator(IOptions<JwtSettings> options)
+public class TokenService(IOptions<JwtSettings> options)
 { 
     private readonly JwtSettings _settings = options.Value;
     

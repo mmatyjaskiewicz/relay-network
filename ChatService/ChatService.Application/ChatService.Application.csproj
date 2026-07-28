@@ -26,8 +26,6 @@
 
     <ItemGroup>
       <Folder Include="DTOs\" />
-      <Folder Include="Interfaces\" />
-      <Folder Include="Repositories\" />
       <Folder Include="Services\" />
       <Folder Include="Validators\" />
     </ItemGroup>
