@@ -2,10 +2,11 @@
 using System.Security.Claims;
 using System.Text;
 using AuthService.Application.Entities;
+using AuthService.Application.Security;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace AuthService.Application.Security;
+namespace AuthService.Application.Services;
 
 public class TokenService(IOptions<JwtSettings> options)
 { 

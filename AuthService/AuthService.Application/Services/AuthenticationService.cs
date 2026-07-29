@@ -3,13 +3,12 @@ using AuthService.Application.Entities;
 using AuthService.Application.Exceptions.Conflict;
 using AuthService.Application.Exceptions.Unauthorized;
 using AuthService.Application.Interfaces;
-using AuthService.Application.Security;
 using MassTransit;
 using Shared.Contracts.Events;
 
 namespace AuthService.Application.Services;
 
-public class AuthenticationService(IUserRepository userRepository,JwtGenerator jwtGenerator, IPublishEndpoint publishEndpoint)
+public class AuthenticationService(IUserRepository userRepository, TokenService tokenService, IPublishEndpoint publishEndpoint)
 {
     public async Task RegisterAsync(RegisterRequest request)
     {
@@ -41,7 +40,7 @@ public class AuthenticationService(IUserRepository userRepository,JwtGenerator j
             throw new UnauthorizedException("Invalid username or password.");
         }
         
-        var token = jwtGenerator.GenerateToken(user);
+        var token = tokenService.GenerateToken(user);
         
         return token;
     }

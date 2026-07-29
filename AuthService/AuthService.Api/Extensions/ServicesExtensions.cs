@@ -9,7 +9,7 @@ public static class ServicesExtensions
     {
         services.AddScoped<AuthenticationService>();
         services.AddScoped<UserService>();
-        services.AddSingleton<JwtGenerator>();
+        services.AddSingleton<TokenService>();
         
         return services;
     }

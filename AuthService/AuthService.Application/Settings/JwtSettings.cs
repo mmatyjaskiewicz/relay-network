@@ -1,4 +1,4 @@
-﻿namespace AuthService.Application.Security;
+﻿namespace AuthService.Application.Settings;
 
 public class JwtSettings
 {
