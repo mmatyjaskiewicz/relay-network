@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService.Application", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatService.Api", "ChatService.Api\ChatService.Api.csproj", "{B6106F3B-DEC2-42C8-A205-A2EE7BC52E9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Contracts", "..\Shared\Shared.Contracts\Shared.Contracts.csproj", "{4E2EC69A-AE6E-495A-BB61-CB4873B394E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{B6106F3B-DEC2-42C8-A205-A2EE7BC52E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6106F3B-DEC2-42C8-A205-A2EE7BC52E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6106F3B-DEC2-42C8-A205-A2EE7BC52E9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E2EC69A-AE6E-495A-BB61-CB4873B394E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E2EC69A-AE6E-495A-BB61-CB4873B394E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E2EC69A-AE6E-495A-BB61-CB4873B394E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E2EC69A-AE6E-495A-BB61-CB4873B394E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
