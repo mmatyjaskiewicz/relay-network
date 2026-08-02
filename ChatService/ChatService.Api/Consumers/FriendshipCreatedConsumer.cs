@@ -3,7 +3,7 @@ using Shared.Contracts.Events;
 
 namespace ChatService.Api.Consumers;
 
-public class UserRegisteredConsumer() : IConsumer<FriendshipCreated>
+public class FriendshipCreatedConsumer() : IConsumer<FriendshipCreated>
 {
     public async Task Consume(ConsumeContext<FriendshipCreated> context)
     {

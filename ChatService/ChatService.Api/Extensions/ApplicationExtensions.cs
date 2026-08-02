@@ -7,6 +7,7 @@ public static class ApplicationExtensions
         services.AddPersistence(configuration);
         services.AddJwtAuthentication(configuration);
         services.AddExceptionHandling();
+        services.AddMassTransitServices(configuration);
         
         return services;
     }
