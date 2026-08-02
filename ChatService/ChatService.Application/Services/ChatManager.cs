@@ -4,7 +4,7 @@ using ChatService.Application.Interfaces;
 
 namespace ChatService.Application.Services;
 
-public class ChatService(IChatRepository chatRepository)
+public class ChatManager(IChatRepository chatRepository)
 {
     public async Task CreatePrivateChatAsync(Guid userId, Guid friendId)
     {

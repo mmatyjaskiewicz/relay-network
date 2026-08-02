@@ -1,13 +1,13 @@
-﻿using MassTransit;
+﻿using ChatService.Application.Services;
+using MassTransit;
 using Shared.Contracts.Events;
 
 namespace ChatService.Api.Consumers;
 
-public class FriendshipCreatedConsumer() : IConsumer<FriendshipCreated>
+public class FriendshipCreatedConsumer(ChatManager chatManager) : IConsumer<FriendshipCreated>
 {
     public async Task Consume(ConsumeContext<FriendshipCreated> context)
     {
-        var message = context.Message;
-        Console.WriteLine($"Friendship created between {message.UserId} and {message.FriendId}");
+        await chatManager.CreatePrivateChatAsync(context.Message.UserId, context.Message.FriendId);
     }
 }
