@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using AuthService.Application.Security;
+using AuthService.Application.Settings;
 
 namespace AuthService.Api.Extensions;
 

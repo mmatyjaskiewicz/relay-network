@@ -1,4 +1,6 @@
-﻿using SocialService.Application.Clients;
+﻿using MassTransit;
+using Shared.Contracts.Events;
+using SocialService.Application.Clients;
 using SocialService.Application.DTOs.Requests;
 using SocialService.Application.Exceptions.Conflict;
 using SocialService.Application.Exceptions.Forbidden;
@@ -8,7 +10,7 @@ using SocialService.Application.Interfaces;
 
 namespace SocialService.Application.Services;
 
-public class FriendshipService(IFriendshipRepository friendshipRepository, AuthClient authClient)
+public class FriendshipService(IFriendshipRepository friendshipRepository, AuthClient authClient, IPublishEndpoint publishEndpoint)
 {
     public async Task SendFriendRequestAsync(Guid senderId, SendFriendRequestDto  request)
     {
@@ -60,6 +62,8 @@ public class FriendshipService(IFriendshipRepository friendshipRepository, AuthC
         }
         
         await friendshipRepository.AcceptFriendRequestAsync(dto.RequestId);
+        
+        await publishEndpoint.Publish(new FriendshipCreated(request.SenderId, request.ReceiverId));
     }
     
     public async Task DeclineFriendRequestAsync(Guid userId, DeclineFriendRequestDto dto)

@@ -1,5 +1,4 @@
-﻿using AuthService.Application.Security;
-using AuthService.Application.Services;
+﻿using AuthService.Application.Services;
 
 namespace AuthService.Api.Extensions;
 
