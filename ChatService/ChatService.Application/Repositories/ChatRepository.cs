@@ -1,6 +1,7 @@
 ﻿using ChatService.Application.Entities;
 using ChatService.Application.Interfaces;
 using ChatService.Application.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatService.Application.Repositories;
 
@@ -17,4 +18,26 @@ public class ChatRepository(ChatDbContext context) : IChatRepository
         await context.ChatMembers.AddAsync(chatMember);
         await context.SaveChangesAsync();
     }
+    
+    public async Task<List<ChatEntity>> GetChatsAsync(Guid userId)
+    {
+        return await context.ChatMembers
+            .Where(cm => cm.UserId == userId)
+            .Select(cm => cm.Chat!)
+            .ToListAsync();
+    }
+
+    public async Task<List<MessageEntity>> GetMessagesAsync(Guid chatId)
+    {
+        return await context.Messages
+            .Where(m => m.ChatId == chatId)
+            .ToListAsync();
+    }
+
+    public async Task SendMessageAsync(MessageEntity message)
+    {
+        await context.Messages.AddAsync(message);
+        await context.SaveChangesAsync();
+    }
+    
 }
