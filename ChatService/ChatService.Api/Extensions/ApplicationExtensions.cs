@@ -8,6 +8,7 @@ public static class ApplicationExtensions
         services.AddJwtAuthentication(configuration);
         services.AddExceptionHandling();
         services.AddMassTransitServices(configuration);
+        services.AddSignalR();
         
         return services;
     }

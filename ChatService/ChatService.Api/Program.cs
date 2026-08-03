@@ -1,4 +1,5 @@
 using ChatService.Api.Extensions;
+using ChatService.Api.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatService.Api;
@@ -16,6 +17,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        
+        app.MapHub<ChatHub>("/chat");
         
         app.Run();
     }
