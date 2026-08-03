@@ -31,6 +31,7 @@ public class ChatRepository(ChatDbContext context) : IChatRepository
     {
         return await context.Messages
             .Where(m => m.ChatId == chatId)
+            .OrderBy(m => m.SentAt)
             .ToListAsync();
     }
 
