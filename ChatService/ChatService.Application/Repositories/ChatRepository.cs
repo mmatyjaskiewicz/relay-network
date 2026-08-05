@@ -35,10 +35,19 @@ public class ChatRepository(ChatDbContext context) : IChatRepository
             .ToListAsync();
     }
 
-    public async Task SendMessageAsync(MessageEntity message)
+    public async Task<MessageEntity> SendMessageAsync(MessageEntity message)
     {
         await context.Messages.AddAsync(message);
         await context.SaveChangesAsync();
+
+        return message;
     }
     
+    public async Task<List<Guid>> GetChatMembersAsync(Guid chatId)
+    {
+        return await context.ChatMembers
+            .Where(cm => cm.ChatId == chatId)
+            .Select(cm => cm.UserId)
+            .ToListAsync();
+    }
 }

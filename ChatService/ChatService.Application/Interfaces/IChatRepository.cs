@@ -8,5 +8,6 @@ public interface IChatRepository
     public Task AddChatMemberAsync(ChatMemberEntity chatMember);
     public Task<List<ChatEntity>> GetChatsAsync(Guid userId);
     public Task<List<MessageEntity>> GetMessagesAsync(Guid chatId);
-    public Task SendMessageAsync(MessageEntity message);
+    public Task<MessageEntity> SendMessageAsync(MessageEntity message);
+    Task<List<Guid>> GetChatMembersAsync(Guid chatId);
 }

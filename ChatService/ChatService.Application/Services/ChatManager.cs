@@ -42,17 +42,22 @@ public class ChatManager(IChatRepository chatRepository)
         return await chatRepository.GetMessagesAsync(chatId);
     }
     
-    public async Task SendMessageAsync(Guid senderId, SendMessageRequest request)
+    public async Task<MessageEntity> SendMessageAsync(Guid userId, SendMessageRequest request)
     {
         var message = new MessageEntity
         {
             Id = Guid.NewGuid(),
             ChatId = request.ChatId,
-            SenderId = senderId,
+            SenderId = userId,
             Content = request.Content,
             SentAt = DateTime.UtcNow
         };
 
-        await chatRepository.SendMessageAsync(message);
+        return await chatRepository.SendMessageAsync(message);
+    }
+    
+    public async Task<List<Guid>> GetChatMembersAsync(Guid chatId)
+    {
+        return await chatRepository.GetChatMembersAsync(chatId);
     }
 }
