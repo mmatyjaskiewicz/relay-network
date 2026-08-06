@@ -1,5 +1,6 @@
 ﻿using ChatService.Application.Exceptions;
 using ChatService.Application.Exceptions.Unauthorized;
+using ChatService.Application.Exceptions.Validation;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace ChatService.Api.Exceptions;
@@ -11,12 +12,14 @@ public class GlobalExceptionHandler : IExceptionHandler
         var title = exception switch
         {
             UnauthorizedException => "Unauthorized",
+            ValidationException => "Validation failed",
             _ => "Internal Server Error"
         };
         
         var statusCode = exception switch
         {
             UnauthorizedException => StatusCodes.Status401Unauthorized,
+            ValidationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
         
